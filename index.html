@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Info Lookup</title>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 500px;
+      margin: 100px auto;
+      text-align: center;
+    }
+    input {
+      padding: 10px;
+      width: 200px;
+    }
+    button {
+      padding: 10px 20px;
+      margin-left: 10px;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    .success {
+      color: green;
+      background-color: #e6ffed;
+    }
+    .error {
+      color: red;
+      background-color: #ffe6e6;
+    }
+    .loading {
+      color: #333;
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome to My Serverless App!</h1>
+  <h2>Get Student Info</h2>
+  <input type="text" id="rollInput" placeholder="Enter Roll No">
+  <button onclick="fetchStudent()">Fetch</button>
+
+  <div id="result"></div>
+
+  <script>
+    async function fetchStudent() {
+      const rollNo = document.getElementById('rollInput').value.trim();
+      const resultDiv = document.getElementById('result');
+
+      if (!rollNo) {
+        resultDiv.className = "error";
+        resultDiv.innerHTML = "⚠️ Please enter a roll number.";
+        return;
+      }
+
+      resultDiv.className = "loading";
+      resultDiv.innerHTML = "⏳ Fetching data...";
+
+      const apiUrl = "https://w5dwyj60dl.execute-api.ap-south-1.amazonaws.com/prod/GetUserFromDynamoDB?roll_no=" + rollNo;
+
+      try {
+        const res = await fetch(apiUrl);
+        const data = await res.json();
+
+        if (data && data.Name && data.Email) {
+          resultDiv.className = "success";
+          resultDiv.innerHTML = `
+            ✅ <strong>Roll_no:</strong> ${data.roll_no}<br>
+            ✅ <strong>Name:</strong> ${data.Name} <br>
+            📧 <strong>Email:</strong> ${data.Email}
+          `;
+        } else {
+          resultDiv.className = "error";
+          resultDiv.innerHTML = "❌ Student not found.";
+        }
+
+      } catch (error) {
+        resultDiv.className = "error";
+        resultDiv.innerHTML = "🚫 Error fetching data. Try again.";
+        console.error(error);
+      }
+    }
+  </script>
+
+</body>
+</html>
