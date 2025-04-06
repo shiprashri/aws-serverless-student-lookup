@@ -31,5 +31,5 @@ This is a simple serverless web application built using AWS services.
 ---
 [Live Demo](https://s3.ap-south-1.amazonaws.com/my.server.less.app-1/index.html)
 
-![Screenshot](Screenshot (160).png)
+[Screenshot](Screenshot (160).png)
 
